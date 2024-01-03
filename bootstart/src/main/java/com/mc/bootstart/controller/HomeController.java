@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -60,12 +61,21 @@ public class HomeController {
 	/* JS 배열 -> LIST, JS {}는 Map으로 받는다 */
 	@PostMapping("/myPost")
 	@ResponseBody
-	public String myPost(@RequestBody Map<String, String> mc) {
+	public String myPost(@RequestBody List<Map<String, String>> mc) {
 		System.out.print("mc: "+mc);
 		
 		return "OK";
 	}
 	
+	//put, delete는 근본적으로 post와 같음
+	//현실에 비유하면 모두가 깃발인데 색깔(의미)만 다른 것
+	@PutMapping("/myPut")
+	@ResponseBody
+	public List<Map<String,String>> myPut(@RequestBody List<Map<String, String>> mc) {
+		System.out.print("mc: "+mc);
+		
+		return mc;
+	}
 	
 }
 	
@@ -76,10 +86,3 @@ public class HomeController {
 	
 	
 	
-	
-	
-	
-	
-	
-
-}
