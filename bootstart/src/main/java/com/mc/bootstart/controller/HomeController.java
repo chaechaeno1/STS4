@@ -9,6 +9,8 @@ import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,5 +55,31 @@ public class HomeController {
 		
 		return myList;
 	}
+	
+	
+	/* JS 배열 -> LIST, JS {}는 Map으로 받는다 */
+	@PostMapping("/myPost")
+	@ResponseBody
+	public String myPost(@RequestBody Map<String, String> mc) {
+		System.out.print("mc: "+mc);
+		
+		return "OK";
+	}
+	
+	
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }
