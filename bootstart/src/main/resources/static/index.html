@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+</head>
+
+<body>
+
+    <h1>Hello! 메롱!</h1>
+    <button id="getBtn">GET방식</button>
+
+    <script>
+        // IE 지원하면 var 쓰고, let,const는 배제!!
+        const getBtn = document.querySelector("#getBtn");
+
+        const fGet = () => {
+            let xhr = new XMLHttpRequest(); //통신 대신해줄 사람
+            xhr.open("get", "/home?merong=메롱&huk=헉", true); //요청 내용
+            xhr.onreadystatechange = () => { //진행상태 파악
+                if (xhr.readyState == 4 && xhr.status == 200) { // 통신 완료!
+                    console.log("항상 돌아온 값 확인:", JSON.parse(xhr.responseText));
+                }
+            }
+            xhr.send(); //실행
+        }
+
+        getBtn.addEventListener("click", fGet);
+
+    </script>
+</body>
+
+</html>
+
