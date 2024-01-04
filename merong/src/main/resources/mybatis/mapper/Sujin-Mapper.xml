@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.e7e.merong.mapper.SujinMapper"> <!-- interface mapper가 와야함 -->
+
+	<select id="listSujin" resultType="SujinVO">
+		select * from sujin
+	</select>
+
+	<select id="getSujin" parameterType="SujinVO"
+		resultType="SujinVO">
+		select * from sujin where sujin_num=#{sujinNum}
+	</select>
+
+	<insert id="insertSujin" parameterType="SujinVO">
+		insert into sujin(sujin_num,sujin_name,sujin_content,sujin_file)
+		values(seq_sujin.nextval,#{sujinName},#{sujinContent},#{sujinFile})
+	</insert>
+
+	<update id="updateSujin" parameterType="SujinVO">
+		UPDATE sujin
+		SET
+		sujin_name=#{sujinName},
+		sujin_content=#{sujinContent},
+		sujin_file=#{sujinFile}
+		WHERE
+		sujin_num=#{sujinNum}
+	</update>
+
+	<delete id="deleteSujin" parameterType="SujinVO">
+		delete from sujin where sujin_num=#{sujinNum}
+	</delete>
+
+</mapper>
+
