@@ -135,13 +135,60 @@
         }
         fGetList(); // 그냥 바로 리스트 콜!
 
+
+
         // get으로 1개 row(sujin) 가져오깅
         const fGetOne = (sujinNum) => {
+            $.ajax({
+                type: "get",
+                url: `/api/sujins/${sujinNum}`,
+                dataType: "json", //VO는 MAP으로 가져옴, 객체 아니면 text로도 쓰기도함
+                success: function (rslt) {
+                    console.log("결과:", rslt);
+                    //form에 출력
+                    myForm.sujinNum.value = rslt.sujinNum;
+                    myForm.sujinName.value = rslt.sujinName;
+                    myForm.sujinContent.value = rslt.sujinContent;
+                    myForm.sujinFile.value = rslt.sujinFile;
+                }
+            })
 
         }
 
         // post로 insert 1개 row(sujin) 
         const fPostInput = () => {
+
+            let sujinVO = {
+                //sujinNum : //자동 시퀀스 생성이라 필요없음
+                sujinName: myForm.sujinName.value,
+                sujinContent: myForm.sujinContent.value,
+                sujinFile: myForm.sujinFile.value
+            }
+
+            console.log("sujinVO : ", sujinVO); //항상 눈으로 값이 잘 들어갔는지 체크!
+
+            $.ajax({
+                type: "post",
+                url: "/api/sujins",
+                contentType: "application/json;charset=UTF-8", //json형식 문자열 보냄을 표시
+                data: JSON.stringify(sujinVO), //객체를 그냥 넘기면 안됨!!!!!!
+                dataType: "text", //돌아오는 값이 단순 숫자!!  입력, 수정, 삭제는 숫자만 들어가기 때문에 json.parse 하면 안됨!
+                success: function (rslt) {
+                    console.log("결과: ", rslt);
+                    if (rslt == 1) {
+                        alert("정말 잘 입력되었어요!");
+                        //tr태그만 한개 만들어서 추가하거나,..
+                        //리스트 호출하거나..
+                        fGetList(); //리스트 다시 뿌리기
+
+                        setTimeout(() => { //변칙 테크닉
+                            myList.scrollTo(0, myList.scrollHeight); //스크롤 끝으로 내리기!
+                        }, 50)
+                    }
+                }
+
+            })
+
 
         }
 
@@ -179,11 +226,45 @@
 
         // put으로 update 수정 부르깅
         const fPutUpdate = () => {
+            let sujinVO = JSON.stringify({
+                sujinNum: myForm.sujinNum.value, //해당 번호가 필요하므로 값을 넘겨야 함
+                sujinName: myForm.sujinName.value,
+                sujinContent: myForm.sujinContent.value,
+                sujinFile: myForm.sujinFile.value,
+            });
+
+            $.ajax({
+                type: "put",
+                url: "/api/sujins",
+                contentType: "application/json;charset=UTF-8",
+                data: JSON.stringify(sujinVO),
+                dataType: "text",
+                success: function (rslt) {
+                    console.log("체크: ", rslt);
+                    if(rslt == 1){
+                        alert("잘 수정되었어요~!");
+                        fGetList(); //새로고침
+                    }
+                }
+            })
 
         }
 
         // delete 메소드로 요청해서 지우깅
         const fDeleteDel = () => {
+            let seqNum = myForm.sujinNum.value;
+
+            $.ajax({
+                type: "delete",
+                url: `/api/sujins/${seqNum}`,
+                dataType: "text",
+                success:function(rslt){
+                    if(rslt==1){
+                        alert("잘 지워졌어요~!");
+                        fGetList();
+                    }
+                }
+            })
 
         }
     </script>
