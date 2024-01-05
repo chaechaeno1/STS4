@@ -1,5 +1,7 @@
 package com.e7e.merong.vo;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -12,6 +14,7 @@ public class SujinVO {
 	private String sujinName;
 	private String sujinContent;
 	private String sujinFile;
+	private MultipartFile sujinFile2;
 
 }
 
