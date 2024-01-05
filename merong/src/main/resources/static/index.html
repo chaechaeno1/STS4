@@ -102,35 +102,35 @@
             //jQuery는 default가 contentType을 application/x-www-form-urlencoded 로 지정하기 때문에...
             //default값을 process(후처리)
             $.ajax({
-                type:"post",
-                url:"/api/sfile",
-                contentType:false, //파일 전송시 필수
-                processData:false, //파일 전송시 필수
-                cache:false,       //이건 옵션, 전송 캐쉬X
-                data:formData,
-                dataType:"text", //파일경로만 받아오므로 text, 중괄호 대괄호가 없으면 무조건 text라고 생각!
-                success:function(rslt){
+                type: "post",
+                url: "/api/sfile",
+                contentType: false, //파일 전송시 필수
+                processData: false, //파일 전송시 필수
+                cache: false,       //이건 옵션, 전송 캐쉬X
+                data: formData,
+                dataType: "text", //파일경로만 받아오므로 text, 중괄호 대괄호가 없으면 무조건 text라고 생각!
+                success: function (rslt) {
                     console.log("체크 :", rslt);
                     let $img = $("<img>");
-                    $img.attr("src",rslt);
-                    $img.css("width","100px").css("height","100px").css("display","block");
+                    $img.attr("src", rslt);
+                    $img.css("width", "100px").css("height", "100px").css("display", "block");
 
                     let $aTag = $("<a>");
-                    $aTag.attr("href",rslt);
+                    $aTag.attr("href", rslt);
                     $aTag.html("민채다운로드");
                     //💥💥 한가지 주의!! Cross-Origin 제약사항 있음
                     let pathArr = rslt.split("/");
-                    $aTag.attr("download",pathArr[pathArr.length - 1]); //마지막꺼
+                    $aTag.attr("download", pathArr[pathArr.length - 1]); //마지막꺼
 
-                    console.log("체크 :",$img);
-                    console.log("체크 :",$aTag[0]);
+                    console.log("체크 :", $img);
+                    console.log("체크 :", $aTag[0]);
                     merong.appendChild($img[0]); // 화면에 붙여넣기
                     merong.appendChild($aTag[0]); // 화면에 붙여넣기
 
                     //다운로드 버튼 누르자마자 바로 다운로드 받게 하려면??
                     $aTag.click(); //그냥 클릭 (이건 장난~)
                 }
-            })   
+            })
 
 
         }
@@ -211,12 +211,15 @@
             tableStr += `<tr><th>Num</th><th>Name</th><th>Content</th><th>File</th></tr>`;
             for (let i = 0; i < sujins.length; i++) {
                 let sujin = sujins[i];
-                tableStr += `<tr onclick="fGetOne(${sujin.sujinNum})">`;
-                tableStr += `<td>${sujin.sujinNum}</td>`;
-                tableStr += `<td>${sujin.sujinName}</td>`;
-                tableStr += `<td>${sujin.sujinContent}</td>`;
-                tableStr += `<td>${sujin.sujinFile}</td>`;
-                tableStr += `</tr>`;
+                tableStr += `<tr onclick="fGetOne(${sujin.sujinNum})">
+                                <td>${sujin.sujinNum}</td>
+                                <td>${sujin.sujinName}</td>
+                                <td>${sujin.sujinContent}</td>
+                                <td><a href="${sujin.sujinFile}" download="민채.jpg">
+                                    <img src="${sujin.sujinFile}" width=50 height=50>
+                                    </a>
+                                </td>
+                            </tr>`;
             }
             tableStr += `<tr></tbody></table>`;
             myList.innerHTML = tableStr;
@@ -269,12 +272,13 @@
             //아작스 파일 전송시 무조건 FormData 필요, 전송 인코딩 방식문제!!!!
 
             let formData = new FormData(); //매개변수로 form객체를 주면 자동으로 입력
-            formData.append("sujinName",myForm.sujinName.value);
-            formData.append("sujinContent",myForm.sujinContent.value);
-            formData.append("sujinFile2",myForm.sujinFile2.files[0]);
+            formData.append("sujinName", myForm.sujinName.value);
+            formData.append("sujinContent", myForm.sujinContent.value);
+            formData.append("sujinFile2", myForm.sujinFile2.files[0]);
 
+            //formData 검증하는 법
             //formData에 들어있는 값 눈으로 확인
-            for(let [key, value] of formData){
+            for (let [key, value] of formData) {
                 console.log("체크(키밸류) :", key, value);
             }
 
@@ -282,9 +286,9 @@
             $.ajax({
                 type: "post",
                 url: "/api/sujins",
-                contentType:false, //필수
-                processData:false, //필수
-                cache:false, // 옵션
+                contentType: false, //필수
+                processData: false, //필수
+                cache: false, // 옵션
                 data: formData, // 문자열(시리얼라이즈)화 하면 안됨!
                 dataType: "text", //돌아오는 값이 단순 숫자!!  입력, 수정, 삭제는 숫자만 들어가기 때문에 json.parse 하면 안됨!
                 success: function (rslt) {
@@ -309,44 +313,44 @@
 
 
 
-/*  파일 없이 보낼 때 !!      
-        // post로 insert 1개 row(sujin) 
-        const fPostInput = () => {
-
-            let sujinVO = {
-                //sujinNum : //자동 시퀀스 생성이라 필요없음
-                sujinName: myForm.sujinName.value,
-                sujinContent: myForm.sujinContent.value,
-                sujinFile: myForm.sujinFile.value
-            }
-
-            console.log("sujinVO : ", sujinVO); //항상 눈으로 값이 잘 들어갔는지 체크!
-
-            $.ajax({
-                type: "post",
-                url: "/api/sujins",
-                contentType: "application/json;charset=UTF-8", //json형식 문자열 보냄을 표시
-                data: JSON.stringify(sujinVO), //객체를 그냥 넘기면 안됨!!!!!!
-                dataType: "text", //돌아오는 값이 단순 숫자!!  입력, 수정, 삭제는 숫자만 들어가기 때문에 json.parse 하면 안됨!
-                success: function (rslt) {
-                    console.log("결과: ", rslt);
-                    if (rslt == 1) {
-                        alert("정말 잘 입력되었어요!");
-                        //tr태그만 한개 만들어서 추가하거나,..
-                        //리스트 호출하거나..
-                        fGetList(); //리스트 다시 뿌리기
-
-                        setTimeout(() => { //변칙 테크닉
-                            myList.scrollTo(0, myList.scrollHeight); //스크롤 끝으로 내리기!
-                        }, 50)
+        /*  파일 없이 보낼 때 !!      
+                // post로 insert 1개 row(sujin) 
+                const fPostInput = () => {
+        
+                    let sujinVO = {
+                        //sujinNum : //자동 시퀀스 생성이라 필요없음
+                        sujinName: myForm.sujinName.value,
+                        sujinContent: myForm.sujinContent.value,
+                        sujinFile: myForm.sujinFile.value
                     }
+        
+                    console.log("sujinVO : ", sujinVO); //항상 눈으로 값이 잘 들어갔는지 체크!
+        
+                    $.ajax({
+                        type: "post",
+                        url: "/api/sujins",
+                        contentType: "application/json;charset=UTF-8", //json형식 문자열 보냄을 표시
+                        data: JSON.stringify(sujinVO), //객체를 그냥 넘기면 안됨!!!!!!
+                        dataType: "text", //돌아오는 값이 단순 숫자!!  입력, 수정, 삭제는 숫자만 들어가기 때문에 json.parse 하면 안됨!
+                        success: function (rslt) {
+                            console.log("결과: ", rslt);
+                            if (rslt == 1) {
+                                alert("정말 잘 입력되었어요!");
+                                //tr태그만 한개 만들어서 추가하거나,..
+                                //리스트 호출하거나..
+                                fGetList(); //리스트 다시 뿌리기
+        
+                                setTimeout(() => { //변칙 테크닉
+                                    myList.scrollTo(0, myList.scrollHeight); //스크롤 끝으로 내리기!
+                                }, 50)
+                            }
+                        }
+        
+                    })
+        
+        
                 }
-
-            })
-
-
-        }
- */
+         */
 
 
         // 참고 postInput을 jqury $.ajax로 고친다면 
